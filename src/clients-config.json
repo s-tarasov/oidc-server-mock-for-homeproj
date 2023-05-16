@@ -1,0 +1,26 @@
+[
+  {
+    "ClientId": "code-mock-client",
+    "ClientSecrets": [ "code-mock-client-secret" ],
+    "Description": "Client for code flow",
+    "AllowedGrantTypes": [ "authorization_code" ],
+    "AllowOfflineAccess": true,
+    "AlwaysIncludeUserClaimsInIdToken": true,
+    "RedirectUris": [ "http://localhost:3000/auth/oidc", "http://localhost:4004/auth/oidc" ],
+    "AllowedScopes": [ "openid", "offline" ],
+    "RequirePkce": "false",
+    "ClientClaimsPrefix": "",
+    "Claims": [
+      {
+        "Type": "string_claim",
+        "Value": "string_claim_value",
+        "ValueType": "string"
+      },
+      {
+        "Type": "json_claim",
+        "Value": "[\"value1\", \"value2\"]",
+        "ValueType": "json"
+      }
+    ]
+  }
+]

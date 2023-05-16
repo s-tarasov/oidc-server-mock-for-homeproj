@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Duende.IdentityServer.Configuration;
 using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Test;
@@ -109,7 +110,7 @@ namespace OpenIdConnectServer
             string configStr = Environment.GetEnvironmentVariable("CLIENTS_CONFIGURATION_INLINE");
             if (string.IsNullOrWhiteSpace(configStr))
             {
-                var configFilePath = Environment.GetEnvironmentVariable("CLIENTS_CONFIGURATION_PATH");
+                var configFilePath = Environment.GetEnvironmentVariable("CLIENTS_CONFIGURATION_PATH") ?? "clients-config.json";
                 if (string.IsNullOrWhiteSpace(configFilePath))
                 {
                     throw new ArgumentNullException("You must set either CLIENTS_CONFIGURATION_INLINE or CLIENTS_CONFIGURATION_PATH env variable");
@@ -122,7 +123,9 @@ namespace OpenIdConnectServer
 
         public static IEnumerable<IdentityResource> GetIdentityResources()
         {
-            IEnumerable<IdentityResource> identityResources = new List<IdentityResource>();
+            return GetCustomIdentityResources().ToArray();
+
+            IEnumerable <IdentityResource> identityResources = new List<IdentityResource>();
             var overrideStandardResources = Environment.GetEnvironmentVariable("OVERRIDE_STANDARD_IDENTITY_RESOURCES");
             if (string.IsNullOrEmpty(overrideStandardResources) || Boolean.Parse(overrideStandardResources) != true)
             {
@@ -142,15 +145,20 @@ namespace OpenIdConnectServer
             string configStr = Environment.GetEnvironmentVariable("USERS_CONFIGURATION_INLINE");
             if (string.IsNullOrWhiteSpace(configStr))
             {
-                var configFilePath = Environment.GetEnvironmentVariable("USERS_CONFIGURATION_PATH");
+                var configFilePath = Environment.GetEnvironmentVariable("USERS_CONFIGURATION_PATH") ?? "users-config.yaml";
                 if (string.IsNullOrWhiteSpace(configFilePath))
                 {
                     return new List<TestUser>();
                 }
                 configStr = File.ReadAllText(configFilePath);
             }
-            var configUsers = DeserializeObject<List<TestUser>>(configStr);
-            return configUsers;
+
+            var configUsers = DeserializeObject<List<CustomTestUser>>(configStr);
+            foreach (var user in configUsers)
+                foreach (var stringClaim in user.StringClaims)
+                    user.Claims.Add(new Claim(stringClaim.Key, stringClaim.Value));
+
+            return configUsers.Cast<TestUser>().ToList();
         }
 
         private static IEnumerable<IdentityResource> GetCustomIdentityResources()
@@ -158,7 +166,7 @@ namespace OpenIdConnectServer
             string identityResourcesStr = Environment.GetEnvironmentVariable("IDENTITY_RESOURCES_INLINE");
             if (string.IsNullOrWhiteSpace(identityResourcesStr))
             {
-                var identityResourcesFilePath = Environment.GetEnvironmentVariable("IDENTITY_RESOURCES_PATH");
+                var identityResourcesFilePath = Environment.GetEnvironmentVariable("IDENTITY_RESOURCES_PATH") ?? "identity-resources-config.yaml";
                 if (string.IsNullOrWhiteSpace(identityResourcesFilePath))
                 {
                     return new List<IdentityResource>();
@@ -185,4 +193,9 @@ namespace OpenIdConnectServer
             public IEnumerable<string> ClaimTypes { get; set; }
         }
     }
+}
+
+public class CustomTestUser : TestUser
+{
+    public Dictionary<string, string> StringClaims { get; set; }
 }

@@ -26,6 +26,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="identity-resources-config.yaml" />
+    <None Remove="users-config.yaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="identity-resources-config.yaml" />
+    <Content Include="users-config.yaml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Duende.IdentityServer" Version="6.2.3" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.13" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="6.0.13" />

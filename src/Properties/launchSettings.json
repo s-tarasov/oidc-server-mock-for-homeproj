@@ -1,0 +1,15 @@
+{
+  "profiles": {
+    "OpenIdConnectServerMock": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "SERVER_OPTIONS_INLINE": "{\"AccessTokenJwtType\":\"JWT\",\"Discovery\":{\"ShowKeySet\":true},\"Authentication\":{\"CookieSameSiteMode\":\"Lax\",\"CheckSessionCookieSameSiteMode\":\"Lax\"}}",
+        "ASPNET_SERVICES_OPTIONS_INLINE": "{\"ForwardedHeadersOptions\":{\"ForwardedHeaders\":\"All\"}}",
+        "API_SCOPES_INLINE": "[ {\"Name\": \"offline\"}]"
+      },
+      "applicationUrl": "https://localhost:51989;http://localhost:51990"
+    }
+  }
+}

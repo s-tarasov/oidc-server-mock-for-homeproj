@@ -1,4 +1,5 @@
-﻿using Duende.IdentityServer.Hosting;
+using Duende.IdentityServer.Hosting;
+using Duende.IdentityServer.Models;
 using Microsoft.Extensions.FileProviders;
 using OpenIdConnectServer;
 using OpenIdConnectServer.Helpers;
@@ -62,7 +63,6 @@ Config.ConfigureOptions<IdentityServerHost.Pages.Login.LoginOptions>("LOGIN");
 Config.ConfigureOptions<IdentityServerHost.Pages.Logout.LogoutOptions>("LOGOUT");
 
 app.UseDeveloperExceptionPage();
-
 app.UseIdentityServer();
 
 var basePath = Config.GetAspNetServicesOptions().BasePath;

@@ -1,0 +1,11 @@
+- Name: openid
+  ClaimTypes:
+  - identity_id
+  - selected_uss_user_type
+  - selected_user_ctn
+  - selected_fttb_convergent_login
+  - selected_user_login
+  - main_uss_user_type
+  - main_user_ctn
+  - main_fttb_convergent_login
+  - main_user_login
