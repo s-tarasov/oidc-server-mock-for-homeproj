@@ -26,13 +26,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="identity-resources-config.yaml" />
-    <None Remove="users-config.yaml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="identity-resources-config.yaml" />
-    <Content Include="users-config.yaml" />
+    <None Remove="*.yaml" />
+    <Content Include="*.yaml" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>
