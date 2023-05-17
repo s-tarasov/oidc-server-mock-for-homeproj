@@ -14,5 +14,5 @@ This project allows you to run preconfigured mock server with OpenId Connect fun
    ```
 ## Configuration
 
-  src\users-config.yaml - users
-  src\clients-config.json - clients
+  - *src\users-config.yaml* - users
+  - *src\clients-config.json* - clients
