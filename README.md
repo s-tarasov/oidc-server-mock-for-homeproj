@@ -9,7 +9,7 @@ This project allows you to run preconfigured mock server with OpenId Connect fun
 
 ## Run
  ```sh
-   cs src
+   cd src
    dotnet run
    ```
 ## Configuration
