@@ -75,8 +75,6 @@ if (!string.IsNullOrEmpty(basePath))
     });
 }
 
-app.UseHttpsRedirection();
-
 var manifestEmbeddedProvider = new ManifestEmbeddedFileProvider(typeof(Program).Assembly, "wwwroot");
 app.UseStaticFiles(new StaticFileOptions
 {
