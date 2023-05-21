@@ -5,6 +5,7 @@ dist
 # .Net project
 bin
 obj
+packages
 
 # Docker
 .docker

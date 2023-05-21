@@ -5,6 +5,8 @@ VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenIdConnectServerMock", "OpenIdConnectServerMock.csproj", "{929D95AE-2E1C-4FDC-97E0-A37C961D3F1F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVC5Client", "..\samples\MVC5Client\MVC5Client.csproj", "{20409EC7-F643-4ECF-89FF-833919743975}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{929D95AE-2E1C-4FDC-97E0-A37C961D3F1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{929D95AE-2E1C-4FDC-97E0-A37C961D3F1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{929D95AE-2E1C-4FDC-97E0-A37C961D3F1F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20409EC7-F643-4ECF-89FF-833919743975}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20409EC7-F643-4ECF-89FF-833919743975}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20409EC7-F643-4ECF-89FF-833919743975}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20409EC7-F643-4ECF-89FF-833919743975}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
