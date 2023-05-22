@@ -46,5 +46,17 @@
         "ValueType": "json"
       }
     ]
+  },
+  {
+    "ClientId": "multidomainapp",
+    "ClientSecrets": [ "multidomainapp-secret" ],
+    "Description": "Client for multidomainapp with hybrid flow",
+    "AllowedGrantTypes": [ "hybrid" ],
+    "AllowOfflineAccess": true,
+    "AlwaysIncludeUserClaimsInIdToken": true,
+    "RedirectUris": [ "http://multidomainapp.local:3000/callback" ],
+    "AllowedScopes": [ "openid", "offline" ],
+    "RequirePkce": "false",
+    "ClientClaimsPrefix": ""
   }
 ]

@@ -35,10 +35,10 @@ namespace MVC5Client
             {
                 AuthenticationType = "OIDC",
                 Authority = "http://localhost:51990",
-                ClientId = "code-id-token-mock-client",
-                ClientSecret = "code-id-token-mock-secret",
-                RedirectUri = "http://localhost:3000/callback",
-                PostLogoutRedirectUri = "http://localhost:3000/",
+                ClientId = "multidomainapp",
+                ClientSecret = "multidomainapp-secret",
+                RedirectUri = "http://multidomainapp.local:3000/callback",
+                PostLogoutRedirectUri = "http://multidomainapp.local:3000/",
                 RedeemCode = true,
                 SaveTokens =  true,
                 ResponseType = OpenIdConnectResponseType.CodeIdToken,
@@ -46,17 +46,8 @@ namespace MVC5Client
                 Scope = "openid offline_access",
                 Notifications = new OpenIdConnectAuthenticationNotifications {
 
-                    SecurityTokenValidated = async n => {
-                        n.AuthenticationTicket.Properties.Dictionary["region"] = "xz";
-                    }, 
-                    TokenResponseReceived = async t =>
-                    {
-                        var x = t.TokenEndpointResponse;
-
-                    }
+                    SecurityTokenValidated = async n => n.AuthenticationTicket.Properties.Dictionary["region"] = "xz"
                 },
-
-
                 TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
                 {
                     NameClaimType = "name",
