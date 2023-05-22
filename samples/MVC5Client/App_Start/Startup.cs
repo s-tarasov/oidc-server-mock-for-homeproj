@@ -4,6 +4,7 @@ using Microsoft.Owin.Host.SystemWeb;
 using Microsoft.Owin.Logging;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
+using Microsoft.Owin.Security.Notifications;
 using Microsoft.Owin.Security.OpenIdConnect;
 using MVC5Client.Misc;
 using Owin;
@@ -44,9 +45,13 @@ namespace MVC5Client
                 RequireHttpsMetadata = false,
                 Scope = "openid offline_access",
                 Notifications = new OpenIdConnectAuthenticationNotifications {
+
+                    SecurityTokenValidated = async n => {
+                        n.AuthenticationTicket.Properties.Dictionary["region"] = "xz";
+                    }, 
                     TokenResponseReceived = async t =>
                     {
-                        var x = t;
+                        var x = t.TokenEndpointResponse;
 
                     }
                 },
