@@ -30,7 +30,7 @@
     "AllowedGrantTypes": [ "hybrid" ],
     "AllowOfflineAccess": true,
     "AlwaysIncludeUserClaimsInIdToken": true,
-    "RedirectUris": [ "http://localhost:3000/auth/oidc", "http://localhost:4004/auth/oidc" ],
+    "RedirectUris": [ "http://localhost:3000/callback" ],
     "AllowedScopes": [ "openid", "offline" ],
     "RequirePkce": "false",
     "ClientClaimsPrefix": "",
