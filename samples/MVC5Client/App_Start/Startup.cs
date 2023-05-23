@@ -1,3 +1,5 @@
+using System;
+using System.Security.Claims;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.Owin;
 using Microsoft.Owin.Host.SystemWeb;
@@ -8,6 +10,7 @@ using Microsoft.Owin.Security.Notifications;
 using Microsoft.Owin.Security.OpenIdConnect;
 using MVC5Client.Misc;
 using Owin;
+using static System.Net.WebRequestMethods;
 
 [assembly: OwinStartup(typeof(MVC5Client.Startup))]
 
@@ -24,6 +27,7 @@ namespace MVC5Client
             {
                 AuthenticationType = CookieAuthenticationDefaults.AuthenticationType,
                 LoginPath = new PathString("/Account/Login"),
+                CookieDomain = ".multidomainapp.local",
                 CookieSameSite = SameSiteMode.Lax,
                 // More information on why the CookieManager needs to be set can be found here: 
                 // https://github.com/aspnet/AspNetKatana/wiki/System.Web-response-cookie-integration-issues
@@ -46,7 +50,20 @@ namespace MVC5Client
                 Scope = "openid offline_access",
                 Notifications = new OpenIdConnectAuthenticationNotifications {
 
-                    SecurityTokenValidated = async n => n.AuthenticationTicket.Properties.Dictionary["region"] = "xz"
+                    SecurityTokenValidated = async n =>
+                    {
+                        n.AuthenticationTicket.Properties.Dictionary["region"] = "spb";
+                    /*    var redirectUri = new Uri(n.AuthenticationTicket.Properties.RedirectUri);
+                        n.AuthenticationTicket.Properties.RedirectUri
+                        = "http://spb.multidomainapp.local:3000/Account/CopyCookie?redirectUri="
+                        + Uri.EscapeDataString(redirectUri.PathAndQuery);
+                    */
+                        var uriBuilder = new UriBuilder(n.AuthenticationTicket.Properties.RedirectUri);
+                        uriBuilder.Host = "spb.multidomainapp.local";
+                        n.AuthenticationTicket.Properties.RedirectUri = uriBuilder.ToString();
+
+                        n.AuthenticationTicket.Identity.AddClaim(new Claim("regionName", "Питер"));
+                    }
                 },
                 TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
                 {
@@ -55,7 +72,7 @@ namespace MVC5Client
                 },
                 // More information on why the CookieManager needs to be set can be found here: 
                 // https://github.com/aspnet/AspNetKatana/wiki/System.Web-response-cookie-integration-issues
-                CookieManager = new SameSiteCookieManager(new SystemWebCookieManager())
+                CookieManager = new RootDomainCookieManger(new SameSiteCookieManager(new SystemWebCookieManager()))
             });
         }
     }
