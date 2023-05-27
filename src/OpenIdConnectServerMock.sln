@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenIdConnectServerMock", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVC5Client", "..\samples\MVC5Client\MVC5Client.csproj", "{20409EC7-F643-4ECF-89FF-833919743975}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVC5PassiveClient", "..\samples\MVC5PassiveClient\MVC5PassiveClient.csproj", "{466E0691-8CD8-412C-B8BB-45199D6638D9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NET6PassiveWebApp", "..\samples\NET6PassiveWebApp\NET6PassiveWebApp.csproj", "{49BEEAC5-E7CE-4BC6-BD77-E80B766F7AA3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{20409EC7-F643-4ECF-89FF-833919743975}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{20409EC7-F643-4ECF-89FF-833919743975}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{20409EC7-F643-4ECF-89FF-833919743975}.Release|Any CPU.Build.0 = Release|Any CPU
+		{466E0691-8CD8-412C-B8BB-45199D6638D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{466E0691-8CD8-412C-B8BB-45199D6638D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{466E0691-8CD8-412C-B8BB-45199D6638D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{466E0691-8CD8-412C-B8BB-45199D6638D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49BEEAC5-E7CE-4BC6-BD77-E80B766F7AA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49BEEAC5-E7CE-4BC6-BD77-E80B766F7AA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49BEEAC5-E7CE-4BC6-BD77-E80B766F7AA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49BEEAC5-E7CE-4BC6-BD77-E80B766F7AA3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -57,6 +57,8 @@
     "RedirectUris": [ "http://multidomainapp.local:3000/callback" ],
     "AllowedScopes": [ "openid", "offline" ],
     "RequirePkce": "false",
-    "ClientClaimsPrefix": ""
+    "ClientClaimsPrefix": "",
+    "IdentityTokenLifetime": 30,
+    "AccessTokenLifetime": 30
   }
 ]
