@@ -129,6 +129,14 @@ namespace MVC5Client.Controllers
             return View();
         }
 
+        [Authorize]
+        public async Task<ActionResult> Properties()
+        {
+            var result = await Request.GetOwinContext().Authentication
+               .AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationType);
+            return View(result.Properties.Dictionary);
+        }
+
         public ActionResult IsAuthorized()
         {
             return this.Json(User.Identity.IsAuthenticated, JsonRequestBehavior.AllowGet);

@@ -1,0 +1,37 @@
+
+@{
+    ViewBag.Title = "Properties";
+}
+
+<h2>Properties</h2>
+
+
+<div class="row">
+    <div class="col-md-12">
+
+        <h3>Properties associated with current User</h3>
+        <p>This page displays all the claims associated the the current User. This is useful when debugging to see which claims are being populated from the Auth0 ID Token.</p>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Props
+                    </th>
+                    <th>
+                        Value
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var prop in Model)
+                {
+                    <tr>
+                        <td>@prop.Key</td>
+                        <td>@prop.Value</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

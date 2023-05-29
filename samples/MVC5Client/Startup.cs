@@ -51,6 +51,8 @@ namespace MVC5Client
                     {
                         OnValidateIdentity = async ctx =>
                         {
+                            ctx.Identity.AddClaim(new Claim("Virtual", "test"));
+
                             if (DateTime.Parse(ctx.Properties.Dictionary["expires_at"]) < DateTime.Now)
                                 ctx.OwinContext.Authentication.Challenge(new AuthenticationProperties
                                 {
@@ -121,16 +123,14 @@ namespace MVC5Client
                         },
                         SecurityTokenValidated = async n =>
                         {
-                            n.AuthenticationTicket.Properties.Dictionary["region"] = "spb";
+                            var claims = n.AuthenticationTicket.Identity.Claims.ToArray();
+                            foreach (var claim in claims)
+                                n.AuthenticationTicket.Identity.RemoveClaim(claim);
+
+                           
                             n.AuthenticationTicket.Identity.AddClaim(new Claim("regionName", "Питер"));
 
-                            var redirectUri = new Uri(n.AuthenticationTicket.Properties.RedirectUri, UriKind.RelativeOrAbsolute);
-
-                            var relativeRedirectUri = redirectUri.IsAbsoluteUri ? redirectUri.PathAndQuery : redirectUri.ToString();
-                            var baseUri = new Uri("http://spb.multidomainapp.local:3000/");
-                            var relativeSubdomainCallbackUri = "/Account/SubdomainCallback?redirectUri="
-                                + Uri.EscapeDataString(relativeRedirectUri);
-                            n.AuthenticationTicket.Properties.RedirectUri = new Uri(baseUri, relativeSubdomainCallbackUri).ToString();
+                            
                         }
                     },
                     TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters

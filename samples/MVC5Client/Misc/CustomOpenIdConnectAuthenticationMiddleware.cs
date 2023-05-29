@@ -1,4 +1,3 @@
-using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.Owin;
@@ -27,45 +26,6 @@ namespace MVC5Client.Misc
         protected override AuthenticationHandler<OpenIdConnectAuthenticationOptions> CreateHandler()
         {
              return new CustomOpenIdConnectAuthenticationHandler(_logger);
-        }
-    }
-
-    public class CustomOpenIdConnectAuthenticationHandler : OpenIdConnectAuthenticationHandler, IRefreshTokenInvoker
-    {
-        public CustomOpenIdConnectAuthenticationHandler(ILogger logger) : base(logger)
-        {
-        }
-
-        private static readonly FieldInfo _configurationField = typeof(OpenIdConnectAuthenticationHandler).GetField("_configuration", BindingFlags.NonPublic | BindingFlags.Instance);
-
-        private OpenIdConnectConfiguration Configuration
-        {
-            get => (OpenIdConnectConfiguration)_configurationField.GetValue(this);
-            set => _configurationField.SetValue(this, value);
-        }
-
-        public async Task<OpenIdConnectMessage> GetTokensAsync(string refreshToken)
-        {
-            if (Configuration == null)
-                Configuration = await Options.ConfigurationManager.GetConfigurationAsync(Context.Request.CallCancelled);
-            
-
-            var tokenEndpointRequest = new OpenIdConnectMessage
-            {
-                ClientId = Options.ClientId,
-                ClientSecret = Options.ClientSecret,
-                RefreshToken = refreshToken,
-                GrantType = OpenIdConnectGrantTypes.RefreshToken
-            };
-
-            return await RedeemAuthorizationCodeAsync(tokenEndpointRequest);
-            
-        }
-
-        protected override Task InitializeCoreAsync()
-        {
-            Context.Set<IRefreshTokenInvoker>(nameof(IRefreshTokenInvoker), this);
-            return base.InitializeCoreAsync();
         }
     }
 

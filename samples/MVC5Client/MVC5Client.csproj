@@ -244,6 +244,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Misc\CustomOpenIdConnectAuthenticationHandler.cs" />
     <Compile Include="Misc\CustomOpenIdConnectAuthenticationMiddleware.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -308,6 +309,7 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\Claims.cshtml" />
     <Content Include="Views\Account\Tokens.cshtml" />
+    <Content Include="Views\Account\Properties.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
