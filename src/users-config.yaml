@@ -11,3 +11,14 @@
     main_user_ctn: 9517192903
     main_fttb_convergent_login: FTTB/0892344577
     main_user_login: 9517192903
+- SubjectId: '2'
+  Username: 9058004571
+  Password: Qwerty44
+  StringClaims:
+    identity_id: e380ffe8-0cc5-4b28-a775-69ac8d9a72af
+    selected_uss_user_type: B2C
+    selected_user_ctn: 9058004571
+    selected_user_login: 9058004571
+    main_uss_user_type: B2C
+    main_user_ctn: 9058004571
+    main_user_login: 9058004571
