@@ -55,6 +55,7 @@
     "AllowOfflineAccess": true,
     "AlwaysIncludeUserClaimsInIdToken": true,
     "RedirectUris": [ "http://multidomainapp.local:3000/callback" ],
+    "PostLogoutRedirectUris": [ "http://multidomainapp.local:3000/", "http://multidomainapp.local:3000/logoutcallback/" ],
     "AllowedScopes": [ "openid", "offline" ],
     "RequirePkce": "false",
     "ClientClaimsPrefix": "",

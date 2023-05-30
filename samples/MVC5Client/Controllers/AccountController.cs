@@ -8,6 +8,8 @@ using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using MVC5Client.Misc;
 using Microsoft.Owin;
 using System.Globalization;
+using System.Security.Claims;
+using System.Collections.Generic;
 
 namespace MVC5Client.Controllers
 {
@@ -29,11 +31,10 @@ namespace MVC5Client.Controllers
 
         public async Task<ActionResult> Refresh(string returnUrl)
         {
-            var manager = new SameSiteCookieManager(new Microsoft.Owin.Security.Interop.ChunkingCookieManager());
-            var ticketCookieValue = manager.GetRequestCookie(Request.GetOwinContext(), CookieAuthenticationDefaults.CookiePrefix + CookieAuthenticationDefaults.AuthenticationType);
-            var ticket = Startup.TicketFormat.Unprotect(ticketCookieValue);
+            var ticket = await Request.GetOwinContext().Authentication
+                 .AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationType);
 
-            
+
             var tokenInvoker = Request.GetOwinContext().Get<IRefreshTokenInvoker>(nameof(IRefreshTokenInvoker));
             try
             {
@@ -48,19 +49,8 @@ namespace MVC5Client.Controllers
                     var expiresAt = DateTime.UtcNow + TimeSpan.FromSeconds(value);
                     ticket.Properties.Dictionary["expires_at"] = expiresAt.ToString("o", CultureInfo.InvariantCulture);
                 }
-                var newTicketCookieValue = Startup.TicketFormat.Protect(ticket);
 
-                var cookieOptions = new CookieOptions
-                {
-                    HttpOnly = true,
-                    Secure = Request.GetOwinContext().Request.IsSecure,
-                    Expires = ticket.Properties.ExpiresUtc.Value.UtcDateTime
-                };
-                
-                manager.AppendResponseCookie(Request.GetOwinContext(),
-                    CookieAuthenticationDefaults.CookiePrefix + CookieAuthenticationDefaults.AuthenticationType,
-                    newTicketCookieValue,
-                    cookieOptions);
+                HttpContext.GetOwinContext().Authentication.SignIn(ticket.Properties, ticket.Identity);
 
                 return Redirect(returnUrl);
 
@@ -69,10 +59,9 @@ namespace MVC5Client.Controllers
             {
                 
             }
-         
-            manager.DeleteCookie(Request.GetOwinContext(), CookieAuthenticationDefaults.CookiePrefix + CookieAuthenticationDefaults.AuthenticationType,
-                new CookieOptions());
-            
+
+            // TODO не работает, разобраться или почистить через куки CookieManager
+            HttpContext.GetOwinContext().Authentication.SignOut(CookieAuthenticationDefaults.AuthenticationType);
 
             var props = new AuthenticationProperties
             {
@@ -84,11 +73,13 @@ namespace MVC5Client.Controllers
             return new HttpUnauthorizedResult();
         }
 
-        [Authorize]
-        public void Logout()
+        public async Task Logout()
         {
             HttpContext.GetOwinContext().Authentication.SignOut(CookieAuthenticationDefaults.AuthenticationType);
-            HttpContext.GetOwinContext().Authentication.SignOut("OIDC");
+            HttpContext.GetOwinContext().Authentication.SignOut(new AuthenticationProperties
+            {
+                RedirectUri = "http://multidomainapp.local:3000/logoutcallback/"
+            }, "OIDC");
         }
 
         [Authorize]
@@ -107,18 +98,12 @@ namespace MVC5Client.Controllers
         
         public async Task<ActionResult> SubdomainCallback(string redirectUri)
         {
-            var manager = new SameSiteCookieManager(new Microsoft.Owin.Security.Interop.ChunkingCookieManager());
-            var cookieValue = manager.GetRequestCookie(Request.GetOwinContext(), CookieAuthenticationDefaults.CookiePrefix + "Temporary");
-            manager.AppendResponseCookie(Request.GetOwinContext(), ".AspNet.Cookies", cookieValue, new CookieOptions
-            {
-                Expires = DateTime.Now.AddDays(1),
-                HttpOnly = true
-            });
+            var result = await HttpContext.GetOwinContext().Authentication.AuthenticateAsync("Temporary");
 
-            manager.DeleteCookie(Request.GetOwinContext(), CookieAuthenticationDefaults.CookiePrefix + "Temporary", new CookieOptions
-            {
-                Domain = ".multidomainapp.local"
-            });
+            HttpContext.GetOwinContext().Authentication.SignIn(
+                result.Properties,
+                new ClaimsIdentity(result.Identity.Claims, CookieAuthenticationDefaults.AuthenticationType));
+            HttpContext.GetOwinContext().Authentication.SignOut("Temporary");
 
             return Redirect(redirectUri);
         }
