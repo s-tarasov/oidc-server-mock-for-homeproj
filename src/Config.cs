@@ -1,3 +1,4 @@
+using System.Reactive.Linq;
 using System.Security.Claims;
 using Duende.IdentityServer.Configuration;
 using Duende.IdentityServer.Models;
@@ -10,6 +11,8 @@ namespace OpenIdConnectServer
 {
     public static class Config
     {
+        private static FileSystemWatcher _watcher;
+
         public static AspNetServicesOptions GetAspNetServicesOptions()
         {
             string aspNetServicesOptionsStr = Environment.GetEnvironmentVariable("ASPNET_SERVICES_OPTIONS_INLINE");
@@ -142,6 +145,7 @@ namespace OpenIdConnectServer
 
         public static List<TestUser> GetUsers()
         {
+            List<TestUser> testUsers = new List<TestUser>();
             string configStr = Environment.GetEnvironmentVariable("USERS_CONFIGURATION_INLINE");
             if (string.IsNullOrWhiteSpace(configStr))
             {
@@ -151,14 +155,57 @@ namespace OpenIdConnectServer
                     return new List<TestUser>();
                 }
                 configStr = File.ReadAllText(configFilePath);
+                WhenFileChanged(configFilePath)
+                    .Subscribe(e =>
+                    {
+                        Console.WriteLine("Reload users config.");
+                        try
+                        {
+                            configStr = File.ReadAllText(configFilePath);
+                            testUsers.Clear();
+                            AddUsers(configStr);
+                        }
+                        catch (Exception exception)
+                        {
+                            Console.WriteLine(exception);
+                        }
+                    });
             }
 
-            var configUsers = DeserializeObject<List<CustomTestUser>>(configStr);
-            foreach (var user in configUsers)
-                foreach (var stringClaim in user.StringClaims)
-                    user.Claims.Add(new Claim(stringClaim.Key, stringClaim.Value));
+            AddUsers(configStr);
 
-            return configUsers.Cast<TestUser>().ToList();
+            return testUsers;
+
+            void AddUsers(string configContent)
+            {
+                var configUsers = DeserializeObject<List<CustomTestUser>>(configContent);
+                foreach (var user in configUsers)
+                    foreach (var stringClaim in user.StringClaims)
+                        user.Claims.Add(new Claim(stringClaim.Key, stringClaim.Value));
+                
+                testUsers.AddRange(configUsers.Cast<TestUser>());
+            }
+        }
+
+        private static IObservable<FileSystemEventArgs> WhenFileChanged(string configFilePath)
+        {
+            _watcher = new FileSystemWatcher(Path.GetDirectoryName(Path.GetFullPath(configFilePath))!);
+            _watcher.Filter = Path.GetFileName(configFilePath);
+            _watcher.NotifyFilter = NotifyFilters.LastWrite; 
+            
+            _watcher.Error += (_, e) => Console.WriteLine(e.GetException());
+
+            var whenFileChanged = Observable.FromEvent<FileSystemEventHandler, FileSystemEventArgs>(handler =>
+            {
+                return (sender, e) => handler(e);
+            },
+            fsHandler => _watcher.Changed += fsHandler,
+            fsHandler => _watcher.Changed -= fsHandler);
+
+            _watcher.EnableRaisingEvents = true;
+
+            return whenFileChanged
+                .Throttle(TimeSpan.FromSeconds(1));
         }
 
         private static IEnumerable<IdentityResource> GetCustomIdentityResources()
