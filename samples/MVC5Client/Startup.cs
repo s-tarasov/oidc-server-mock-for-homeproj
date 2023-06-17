@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
@@ -36,7 +37,16 @@ namespace MVC5Client
               CookieAuthenticationDefaults.AuthenticationType,
               "v2")));
 
-            var authPaths = new[] { "/callback", "/Account/Login", "/Account/Refresh", "/Account/SubdomainCallback", "/Account/Logout" };
+            var authPaths = new HashSet<string>
+            {
+                "/callback",
+                "/Account/Login",
+                "/Account/Refresh",
+                "/Account/SubdomainCallback",
+                "/Account/Logout",
+                "/Becnhmark/CachedJson4KInBranch",
+                "/Becnhmark/Json4KInBranch"
+            };
             app.MapWhen(c => authPaths.Contains(c.Request.Path.Value), appM =>
             {
                 appM.UseCookieAuthentication(new CookieAuthenticationOptions

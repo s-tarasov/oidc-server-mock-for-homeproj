@@ -2,6 +2,7 @@
 using Microsoft.Owin.Infrastructure;
 using Microsoft.Owin;
 using System.IO;
+using System.Diagnostics;
 
 namespace MVC5Client.Misc
 {
@@ -98,7 +99,7 @@ namespace MVC5Client.Misc
         }
 
 
-
+        [Conditional("Debug")]
         private void PrintCurrentIntegratedPipelineStage(IOwinContext context, string msg)
         {
             var currentIntegratedpipelineStage = System.Web.HttpContext.Current.CurrentNotification;

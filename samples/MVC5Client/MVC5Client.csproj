@@ -244,6 +244,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\BecnhmarkController.cs" />
     <Compile Include="Misc\CustomOpenIdConnectAuthenticationHandler.cs" />
     <Compile Include="Misc\CustomOpenIdConnectAuthenticationMiddleware.cs" />
     <Compile Include="Startup.cs" />
