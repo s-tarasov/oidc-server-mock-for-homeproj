@@ -79,7 +79,19 @@ namespace MVC5Client
                     // More information on why the CookieManager needs to be set can be found here: 
                     // https://github.com/aspnet/AspNetKatana/wiki/System.Web-response-cookie-integration-issues
                     CookieManager = new SameSiteCookieManager(new ChunkingCookieManager()),
-                    TicketDataFormat = TicketFormat
+                    TicketDataFormat = TicketFormat,
+                    Provider = new CookieAuthenticationProvider
+                    {
+                        OnResponseSignIn = ctx =>
+                        {
+                            var props = ctx.Properties.Dictionary;
+                            var known = new[]{ "refresh_token", "id_token", "access_token", "expires_at" };
+                            foreach (var key in props.Keys.ToArray())
+                                if (!known.Contains(key))
+                                    props.Remove(key);
+                            ctx.CookieOptions.Expires = DateTime.UtcNow.AddDays(7);
+                        }
+                    }
                 });
 
                 appM.Use(typeof(CustomOpenIdConnectAuthenticationMiddleware), appM, new OpenIdConnectAuthenticationOptions
@@ -111,8 +123,10 @@ namespace MVC5Client
                         {
                             var state = GetPropertiesFromState(c.ProtocolMessage.State, c.Options);
                             if (state.Dictionary["prompt"] == "none")
+                            {
                                 c.Response.Redirect(state.RedirectUri);
-                            c.HandleResponse();
+                                c.HandleResponse();
+                            }
                         },
                         SecurityTokenValidated = async n =>
                         {
