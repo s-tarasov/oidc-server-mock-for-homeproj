@@ -2,6 +2,10 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.AspNetCore.DataProtection.KeyManagement;
+using Microsoft.Extensions.Options;
+using Microsoft.Extensions.DependencyInjection;
+using NET6PassiveWebApp;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,9 +15,27 @@ builder.Services.AddRazorPages(options =>
     options.Conventions.AuthorizePage("/Privacy");
 });
 
-builder.Services.AddDataProtection()
-    .PersistKeysToFileSystem(new DirectoryInfo(@"c:\Temp\Rings"))
-    .SetApplicationName("SharedCookieApp");
+if (builder.Configuration.GetValue<bool>("UseEnvKeys"))
+{
+    builder.Services.AddDataProtection()
+        .DisableAutomaticKeyGeneration()
+        .SetApplicationName("SharedCookieApp");
+
+    builder.Services.AddSingleton<ConfigurationXmlRepository>();
+    builder.Services.AddSingleton<IConfigureOptions<KeyManagementOptions>>(sp => {
+        return new ConfigureOptions<KeyManagementOptions>(options =>
+        {
+            options.XmlRepository = sp.GetRequiredService<ConfigurationXmlRepository>();
+        });
+    });
+}
+else
+{
+    builder.Services.AddDataProtection()
+        .PersistKeysToFileSystem(new DirectoryInfo(@"c:\Temp\Rings"))
+        .DisableAutomaticKeyGeneration()
+        .SetApplicationName("SharedCookieApp");
+}
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>

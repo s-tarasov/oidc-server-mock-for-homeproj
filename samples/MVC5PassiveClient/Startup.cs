@@ -26,7 +26,7 @@ namespace MVC5Client
             var ticketFormat = new AspNetTicketDataFormat(
         new DataProtectorShim(
             DataProtectionProvider.Create(new DirectoryInfo(@"c:\Temp\Rings"),
-            builder => builder.SetApplicationName("SharedCookieApp"))
+            builder => builder.SetApplicationName("SharedCookieApp").DisableAutomaticKeyGeneration())
             .CreateProtector(
                 "Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationMiddleware",
                 // Must match the Scheme name used in the ASP.NET Core app, i.e. IdentityConstants.ApplicationScheme
